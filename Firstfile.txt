@@ -1,3 +1,4 @@
 Git commands .
 git init - to crate git repo .
 https://techoverflow.net/2017/08/09/how-to-solve-git-fatal-no-configured-push-destination/
+ great
