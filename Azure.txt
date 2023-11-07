@@ -1,0 +1,71 @@
+-- DevOps is  a clture which fills gap b/w DEV& OPS teams 
+-- Both teams work together in entire SDLC to ensure quality of the product , ablity of the product to wrk on differnt environments  .
+-- Lots tols avilabe for DevOps 
+
+Devps Benfts ;
+-------------
+Fast Delivery ,
+Reduce Time ,
+Rollback,
+quality,
+Collabaration
+More Agility ,
+Easy to mnintanance ,
+Secure,
+
+
+Azure DevOps services ,
+====================
+Boards -- To track the work
+Repos -- To maintain the code 
+Pipelines -- To deploy the code ,
+TestPlans -- Testing (Manual and Automation)
+Artifacts -- To maintain the required Public/Private Packages s
+
+Azure provides two type of server configuurations .
+1--- Cloud ,
+2-- on-premises
+
+Organization :
+------------
+
+--To work with Azure we should have atleast one oraganizaion , if we login with an accunt one default organization will create automatically by using malID
+--Every project wll belongs to one organzation .
+--we can create multiple organizations 
+--organization is a mechanisim which organizes and manges the groups of relted projects
+--If we have large number of project , we can create multiple organizations,
+-- each organization wll have its own URL (dev.azure.com/{Organization name})
+-- Organization name is prt of the URL , So organization must be uniqe,
+
+
+Azure Boards:
+------------
+Tracking work with kanboard 
+Work with Backlog creation,
+Team DashBoard,
+Rporting,
+Azure board provide drag & Drop feature to update kanban board,
+Azure Boards are fully compatabl with scrum .
+
+--- we can managing and traking the work ,we can provide access to the stakeholders to see progress of our work .
+-- we can manage scrum , sprint wth Azure Boards.
+-- we can manage product backlog and also we get  differnt types reports in Azure boards  .
+
+Devs work to manage their work on boards,
+PO is the resonsible for backlogs creation .
+Scrum master will work to get the reports on teams progress.
+Stakeholder work to see status of what team is doing .
+
+Azure bOards types ;
+--------------------
+4 types boards available Agile,Basic, CMMI , Scrum. we can select the type of the board while creating the project .
+Each type provide different workflow & workitems.
+
+
+
+
+
+
+CI/CD (Continious Intigration / Continous Deliverry)
+=====
+After completing the development of a project we will use CI/CD pipelines to automate deploy/publish the project.

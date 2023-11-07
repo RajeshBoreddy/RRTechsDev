@@ -1,0 +1,397 @@
+AEM Notes :
+
+ClientLibs :
+------------
+ these are CSS and JS files call it as a single JS and CSS in site
+ folder : clintlibs(cq:ClinentLibraryFolder )
+ 
+ [properties :
+ 
+  catagories  - 
+               to call clientlibrary. Clientlib can have one or more catagories,
+  
+  allowProxy -
+              it should be true to load clintlibs on dispatcher ,
+  
+  embed - to add other clintlibs ,
+           This defines the categories which will be combined to the current clientlib. AEM will merge all clientlibs into the current clientlib. This is usually used for minimizing requests and for accessing clientlibs which are not supposed to be exposed to public
+  
+  dependency  - This defines that other categories which are depending on curret clientlib
+                This property is transitive – if Clientlib A depends on Clientlib B which depends on Clientlib C, then all clientlibs will be included in the page
+  ]
+          CSS(nt:folder)
+		    css.txt
+		  JS(nt:folder)
+		    js.txt
+		  Resources
+		    font files ,logos, static images used for CSS
+			
+
+To load clientlibs in page use this in htl page :<data sly-use.clientlib= "/libs/granite/sightly/templates/clientlib.html"><path for clientlib.html from granite>
+
+ To call all JS & CSS in sigle shot <sly data-sly-call="${clientlib.all@categories='clientlibfolder name'}"/>
+</sly>
+			
+			ClientLibs folder can be keep in /apps 
+			
+To minify the clientlibs enable "Adobe Granite HTML Library Manager"  in config manager  .
+
+extra clientlibs :
+----------------
+              we have to add this property to dialog level of the component  .Instead of calling all clientlibs , if we set category under       extra clientlibs ,  it will call only componenet specific client library	
+
+			
+Sling model :
+--------
+To treat a class as sling model ,add the annotation @Model
+
+To intigrate a model class with HTL add the below tag in HTL page 
+
+data-sly-use.model="<Fully qualified name>com.adobe.aem.guides.wknd.core.models.HelloWorldModel">
+
+annotations:
+.............
+@Model: declares a bean as Sling Model.
+
+ adaptables = SlingHttpServletRequest.class -If Sling Objects (eg. currentStyle, currentPage, xssApi etc) are also required, prefer adapting to SlingHttpServletRequest.
+ 
+ defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
+
+ 
+ 
+@Inject: Injects resource property into a class variable.
+ @ValueMapValue
+@PostConstruct: declares the function which would initialize the bean after deriving information based on business logic. The function is called after the all injections have completed.
+@default - to add default value to the filed 
+@optional -
+@required 
+@Named -  if the field name is different from the property name(@Inject @Named("jcr:created")
+																private String created;)
+@resourcepath(path = "/content/sourcedcode/en/home") - to inject a resource path in sling model , we can add multiple paths by replacing the parameter "path to paths"
+@Via  - Sometimes we may use SlingHttpServletRequest as adaptable but we may need to inject through resource for specefic variable 
+
+ @Inject @Via("resource")
+    private String title;
+	
+@OSGIService/@inject - TO call the service from a sling model
+
+@Reference(target = service path) - to call a service other than a sling model , this annotation should use a paramter "target" 
+
+
+
+Editable Template :
+-------------
+
+editable template will be undder /conf/<project name>/wcm/templates[cq:page] , policie[cq:page],template-type[cq:page] . 
+
+ To create a editable template, we should have template type .
+ default template-type will be load from /libs/settings/template-type
+ connection b/w template and template-type is static . If we make changes on template-type it will not effect editable template
+ connection b/w tempate and pages is dynamic  . If we make changes on Editbale template , it will effect the page
+ To create template-type , we should have page component
+ 
+ 
+Initiol : Component which are added in intioal content can be removed by author in page level 
+Structure : If we add component under structure that component will be locked and Author can not remove in page 
+Plocies : We can define the behaviour of the template ,what are the components we can add to the template in intiol and structure  .
+
+          we can deferenciate policies into 3 types , page level,component level,container level
+
+
+Editable templates restrictions :
+
+allowed paths :
+			in template for the property allowed path add the path /content/<projetname> --> this template will visible for only the pages under      the specefic project  .
+
+Allowed Templates :
+            inside project /content/<projectname>/jcr:content 
+			add a property cq:allowedTemplates and add the path of the templates 
+
+
+To allow a editable templete to create a page , add the template path in allowed path in the parent page  properties 
+
+
+
+
+
+Experiance Fragments :
+=====================
+if we want to use a componant with same content in multiple pages, we can create it as experiance fragment .
+Experiance fragment will be create under the path 
+/content/experiance-fragments/
+
+Content Fragment :
+-------------
+It will contains only content without any styles and images 
+we should have content fragment model , which will have required fileds . By using a content fragment model we can create content fragment .
+we can create multiple variants for using one content fragment model with different content and size .
+Content Fragement is pure txet and images content , it will not have any style and layout .
+To author this we should use conteant fragment component . this component is available in core components, also we can create custom component.
+ 
+ to enable access to create contentfragment models in configuration browser select project name and go to properties and mark the checkbox for contentfragment model 
+
+Contentfragment model will be under /assets/Contentfragmentmodel .once CF is created it will be stored in 
+/conf/<projectname>/settings/dam/cfm/models
+
+
+
+Multifield :
+==========
+Multifield Node : Sling resourceType : granite/ui/components/coral/foundation/form/multifield
+					Composite : false (Default)
+
+To limit the number of multifields add below property to multifield node
+
+granite:class=granite-ui-validation-multifield-max-items”
+validation=max-items-<number of fileds >
+
+Fileds of multifield component : text field ,
+
+Node Structure of multifiled on Page :
+-----------------------------------
+For single Multifiled :
+..........
+If composite - false , All entries of a the filed are stored in String[] with component  name .
+
+	ex : Componentname :
+				property : filed name = [v1,v2]
+If Composite - true - All entriesof the file are stored as String with filed name 
+	ex : Componentname:
+			New node with fild name : 
+					item-1 =v1
+					item-2=v2
+
+For Multiple multifiled :
+......................
+	Dailog :Sling: resourceType: multifield
+		Filed : sling:resourceType:container 
+			Filed Names :
+			
+
+Sling Model Unit Testing :
+=========================
+
+@beforeEach - this will execute everytime before each method execute
+
+AEM Run modes :
+==============
+Run modes means , Author, publish , QA, Prod & Live 
+
+Installation runmodes :
+.....................
+Author , Publish, samplecontent, Nosamplecontent 
+
+Default is Author with samplecontent or publish with samplecontent
+
+Custom runmode : QA,Dev,local, prod
+
+
+Servelts in AEM :
+==================
+
+Sling servlets can be written in two ways ResourceType & Path
+prefered is resource type 
+-> Servlet extends two class SlingSafeMethodsServlet or SlingAllMethodsServlet
+
+SlinfSafeMethodsServlet :- this servlet will be used if we have only Get / read operation requirement 
+
+SlingAllMethodsServlet :-  If we have required both Get and Post we have to use this servlet
+
+ResourceType:
+..............
+@Component(service=Servlet.class)
+@SlingServletResourceTypes(
+	ResourceType="<sling:resourceType of the required component  >"
+	methods-HTTPConstants.METHOD_GET,
+	extensions="txt"
+	)
+public class ServletDemo extends SlingAllMethodsServlet{}
+
+Path type :
+..........
+@Component(service=Servlet.class)
+@SlingServletPaths(
+	values = "/bin/geekspath"
+	)
+public class ServletDemo extends SlingAllMethodsServlet{}
+
+
+If we use both path and resourcetype in the servlet , it will ignore resourcetype .
+
+selectors and extensions are works with resourcetype only .
+
+
+Selectors :
+...........
+
+Workflows :
+==============
+Workflow Session ,(resource Resolver )
+Workflow Model (workflow path in /var/)<runtime path>
+workflow data (paylod )--> payload means page path on which we want to run workflow 
+
+
+MSM :
+=====
+
+Language Copy :
+Blueprint :
+			
+			
+Dispatcher :
+==============
+Dispatcher will be used for caching , load balancing, security 
+
+Dispatcher is a module which we need to add to the webserver to configure dispatcher .
+   
+After downloading the dipatcher , extract it and move the file ".dil" into webserver apache and paste it in modules folder (We can paste it any folder ).
+After moving .dil file to webserver , in the webserver open httpd.conf file and add the entry to the dispatcher 
+
+                   ex: LoadModule dispatcher_module modules/dipspacther file name (.dill file)/
+				   
+Dispatcher flush : Enable it on author/pub instance and add the server ip in allowd clients in cache section of dispatcher file .
+
+           it would good if we setup the dispatcher flush in publiush instead of author . 
+To setup the dispatcher flush agent on publisher , in author /etc/repliaction.html go to agents on publish and add the server ip in the URL filed in transport tab and in settings tab select Dispatcher flush for serialization type filed . 
+once all settings are complteted , publish the page to publisher and then diactivate on author .  If we did not diactivate , it will clear the cache in from both agents and it will beacome performance issues 
+
+virtual host : 
+
+Rewrite flags : PT - pass through - internal redirect - url will not change
+                L - last - if we have multiple rules it will excute the last added rule 
+				
+/renders      : will tell which publishers that particular dispatcher should be connected with .
+
+               if any request went to a publisher and that pusblisher is not responding it will not throw any error to the end user , the request will trigger to another publisher which we added in the renders section .
+
+
+
+Docroot : This is the path where cache will store 
+
+
+Sling dynmaic include : 
+--------------------------
+If we don't want to cache perticular external API , we can configure it with Sling dynmaic include .
+by using this we can prevent a perticular component to be cached 
+
+
+OSGI Service :
+------
+
+Life cycle of OSGI bundle 
+
+INSTALLED : If a bundle is installed state , OSGI knows that this bundle is ready to load 
+RESOLVED   :  Bundle is ready to start , all required resources are loaded .
+STARTING   : Bundle is starting , not yet fully active
+ACTIVE     : Bundle is successfully active and ready to use 
+STOPPING   : Bundle is beeing stopped , but not completly stopped , Bundle will go to RESOLVED mode
+UNINSTALLED : Once the bundle is in uninstalled state , we can not use it 
+
+If we want to reuse the code in multiple places we can create OSGI service
+
+@Component(service =< class name> ) - which will define a class as service .
+
+@ServiceRanking (100) - If an interface having multiple impl classes by using the below annotation we call the required class
+
+If we didn't add @ServiceRanking , it will take the class which is having less service ID
+
+@OSGIService(filter = "componant.name=<full service path >") - If an interface having multiple impl classes, by using this annotation we call required class
+
+@Reference(target = service path) - to call a service other than a sling model , this annotation should use a paramter target 
+
+OSGI Configuration :
+-------------------
+@ObjectClassDefinition - to create OSGI configuration, class/interface with all required fields should annotated with this annotation .
+
+@AttributeDefinition - to create a filed in OSGI configuration with name , type and descrption 
+
+                   @ObjectClassDefinition(name = "SourcedCode - Site Settings Configuration",description = "dialog description")
+									public @interface SourcedCodeSiteSettingsConfigExample {
+										@AttributeDefinition(
+												name = "String[] Label",
+												description = "String[] Config Example Description",
+												type = AttributeType.STRING)
+										String[] config_string_array_example() default {"item1", "item2"};
+										// config2 @AttributeDefinition()
+										// config3 @AttributeDefinition()
+									}
+
+To add check box = boolean isPossible() default false ;
+To add password =  String isPassword();
+                   and in the @AttributeDefinition annotation add the parameter "type= AttributeType.PASSWORD "
+To add multifiled = String[] fieldName() ;
+To add filed = String filedName();
+To add dropdown =  String isDropdown(); 
+                    and in the @AttributeDefinition annotation add the parameter "options = {@option(lable = "" value = "")} "
+
+@Designate - with this annotation we can import the class/interface which is annotated with @ObjectClassDefinition in to the OSGI component 
+
+   @Component(service = SourcedCodeSiteSettingsService.class, immediate = true)
+@Designate(ocd = SourcedCodeSiteSettingsConfig.class)
+
+@Activate - Once bundile is deployed this method will trigger
+@Modified - If we made any changes onfiguration fileds , this will trigger 
+
+osgi cinfiguration will store under /apps/projectname/config.author/<create a node with resourceType as sling:OsgiConfig>
+
+HTL :
+----
+data-sly-test      - we can use this block statement as if condition in HTL .if conditions is false , it will not display any output .
+<sly data-sly-use> - we can use this to intialize the java class , css and JS files  .
+data-sly-unwrap    - it will remove the html elements in the output 
+						ex : <div data-sly-test="${myTest}" data-sly-unwrap>Foo</div>
+data-sly-text      - It will display the value of the element .
+                        ex: <p data-sly-text="${properties.jcr:title}">This text would never be shown.</p>
+						   o/p : value of jcr:title .
+data-sly-attribute -  This block statement sets an attribute to an element. The attribute will be shown only if the value exists unless the      
+                      attribute  is omitted
+					  
+data-sly-element   - it will be used to replace the element with host element of HTML tags .
+                         ex: <h6 data-sly-element="${headerLevel}">Title Text</h6>,
+                             This replaces the h6 with the value of headerLevel. (Say the returned value for 'headerLevel' is 1, the <h6> will be replaced to h1)
+data-sly-repeat    - This tag helps to repeat an element multiple times based on the list which is specified.
+                           ex: <div data-sly-repeat="${currentPage.listChildren}">${item.name}</div>
+								The difference with <data-sly-list/> is that list needs a container element where repeat does not require it.
+data-sly-list      - The List statement helps us to iterate over an enumerable property.​
+                      We can use this tag for multifield.
+
+data-sly-resource  -  The resource statement can be used just like an include/import statement to include the result of the indicated resource.
+                       We can add one componant in midile of another component .
+
+						EX: <div data-sly-resource="${@resourceType='<component path>'}"></div>
+						
+data-sly-include   - Includes the rendering of the indicated template (Sightly, JSP, ESP, etc.)​
+                         ex: <section data-sly-include="path/to/jsptemplate.jsp"></section>
+
+data-sly-template  - if we want to reuse a perticular snippet of code we can write it as separte html file with data-sly-template and by using 
+					dat-sly-use we can intiate the code into requred htl file and by using data-sly-call we can  call the required object
+					
+					
+
+					
+					
+Dialogues :
+--------
+
+If we want to inherit only some part of the component add "sling:ResourceType = granite/ui/components/foundation/include" in child component property and add the property "path : and provide the path oc the component "
+
+Overriding / proxy component:  Wee can extend the compnent and add extra functionalities .
+----------------------------
+              By sling:resourceSupertype we can extend the existing component . If there is any new featurtes add to this component from adobe , we can use it without any changes . 
+			  
+
+Overly : 
+-------
+          we can replace the existing behavior of the component . We can copy existing componenet from /libs and paste it into /apps folder and we can made required chnages to it  .  If there is any new featurtes add to this component from adobe, we have to add those changes manually .
+		  
+
+Servicepack : 6.5.10
+        
+
+Scheduler :
+---------
+		
+		 
+
+
+
