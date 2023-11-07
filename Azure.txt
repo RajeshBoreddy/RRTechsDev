@@ -61,6 +61,9 @@ Azure bOards types ;
 4 types boards available Agile,Basic, CMMI , Scrum. we can select the type of the board while creating the project .
 Each type provide different workflow & workitems.
 
+Azure Board with BASIC :
+------------------------
+
 
 
 
